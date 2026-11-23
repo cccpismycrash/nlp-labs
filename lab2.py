@@ -2,6 +2,8 @@
 
 import gensim
 import re
+from math import comb
+
 from itertools import combinations
 
 pat = re.compile("(.*)_NOUN")
@@ -31,8 +33,12 @@ def find_combination(t1, t2):
         (set(words1) | set(words2)) - {t1, t2}
     )
 
+    total = comb(len(candidates), 2)
+
     # перебираем пары
-    for w1, w2 in combinations(candidates, 2):
+    for i, (w1, w2) in enumerate(combinations(candidates, 2)):
+
+        print(f"\rПрогресс: {i + 1}/{total}", end="", flush=True)
 
         # Пробуем различные знаки линейной комбинации
         for positive, negative in [
