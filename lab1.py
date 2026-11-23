@@ -1,5 +1,6 @@
 # Предобработка текста
 
+import sys
 import nltk
 from nltk.tokenize import sent_tokenize, word_tokenize
 import pymorphy3
@@ -7,9 +8,14 @@ import pymorphy3
 # nltk.download('punkt')
 morph = pymorphy3.MorphAnalyzer()
 
-with open('Преступление и наказание первая часть глава первая.txt', 'r') as file:
-    text = file.read()
-# len('Длина текста в символах: ', text)
+text = sys.stdin.read()
+
+if not text.strip():
+    print("Передайте содержимое текста в программу: py -u lab1.py < text.txt")
+    sys.exit()
+
+# with open('Преступление и наказание первая часть глава первая.txt', 'r') as file:
+#     text = file.read()
 
 # проводим сегментацию
 sentences = sent_tokenize(text, language='russian')
