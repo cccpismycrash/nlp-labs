@@ -65,7 +65,25 @@ def find_combination(t1, t2, exclude: list, rand=False, random_state=None):
                     print(res) 
                 return
 
-target1 = "король_NOUN"
-target2 = "церковь_NOUN"
+while True:
+    try:
+        target1 = input("Введите первое слово: ")
+        target2 = input("Введите второе слово: ")
+        exclude = input("Введите слова для исключения (через пробел): ").strip().lower()
 
-find_combination(target1, target2, [])
+        target1 += "_NOUN"
+        target2 += "_NOUN"
+        exclude = [word + "_NOUN" for word in exclude.split()]
+        rand = input("Перемешать? (y/n): ").strip().lower() == "y"
+        random_state = None
+
+        if rand:
+            random_state = int(input("Seed (если "", то случайный сид): ").strip())
+
+        print()
+        find_combination(target1, target2, [], rand, random_state)
+        print()
+
+    except KeyboardInterrupt:
+        print("\nОкончание работы")
+        break
