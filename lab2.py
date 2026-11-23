@@ -2,23 +2,16 @@
 
 import gensim
 import re
-from math import comb
+import random
 
+from math import comb
 from itertools import combinations
 
 pat = re.compile("(.*)_NOUN")
-word2vec = gensim.models.KeyedVectors.load_word2vec_format('cbow.txt', binary=False)
 
-# фильтруем слова, оставляем только существительные
-nouns = [
-    word for word in word2vec.index_to_key
-    if pat.fullmatch(word)
-]
+model = gensim.models.KeyedVectors.load("nouns.kv", mmap="r")
 
-model = gensim.models.KeyedVectors(vector_size=word2vec.vector_size)
-model.add_vectors(nouns, word2vec[nouns])
-
-def find_combination(t1, t2):
+def find_combination(t1, t2, exclude: list, rand=False, random_state=None):
 
     words1 = [
         word for word, _ in model.most_similar(t1, topn=100)
@@ -30,8 +23,14 @@ def find_combination(t1, t2):
 
     # объединяем и исключаем целевые слова
     candidates = list(
-        (set(words1) | set(words2)) - {t1, t2}
+        (set(words1) | set(words2)) - {t1, t2, *exclude}
     )
+
+    candidates = sorted(candidates)
+
+    if rand:
+        rng = random.Random(random_state)
+        rng.shuffle(candidates)
 
     total = comb(len(candidates), 2)
 
@@ -69,4 +68,4 @@ def find_combination(t1, t2):
 target1 = "король_NOUN"
 target2 = "церковь_NOUN"
 
-find_combination(target1, target2)
+find_combination(target1, target2, [])
