@@ -1,3 +1,4 @@
 *.ipynb
 __pycache__
 cbow.txt
+lab1_control.txt
