@@ -4,6 +4,9 @@ import torch
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 np.random.seed(42)
 torch.manual_seed(42)
+from transformers.utils import logging
+
+logging.set_verbosity_error()
 
 def load_tokenizer_and_model(model_name_or_path):
     return GPT2Tokenizer.from_pretrained(model_name_or_path), \
@@ -17,7 +20,6 @@ def generate(
     no_repeat_ngram_size=3
     ):
     input_ids = tok.encode(text, return_tensors="pt")
-    print(model.generate.__globals__['__file__'])
     out = model.generate(
         input_ids,
         max_length=max_length,
@@ -30,15 +32,20 @@ def generate(
 
 tokenizer, model = load_tokenizer_and_model('ai-forever/rugpt3large_based_on_gpt2')
 
-prompt = "В Томске сухая погода, я был сейчас сходил "
+while True:
+    try:
+        prompt = input("Введите промпт: ")
 
-result = generate(
-    model, tokenizer, prompt,
-    do_sample=True, max_length=100, repetition_penalty=5.0,
-    top_k=5, top_p=0.95, temperature=1,
-    num_beams=1,
-    no_repeat_ngram_size=3
-    )
+        result = generate(
+            model, tokenizer, prompt,
+            do_sample=True, max_length=100, repetition_penalty=5.0,
+            top_k=5, top_p=0.95, temperature=1,
+            num_beams=1,
+            no_repeat_ngram_size=3
+            )
 
-print(prompt)
-print(" ".join(result))
+        print(" ".join(result))
+        print()
+
+    except KeyboardInterrupt:
+        exit()
