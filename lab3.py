@@ -8,7 +8,12 @@ model = BertForMaskedLM.from_pretrained(name, return_dict = True)
 
 # target: происходит, отличается
 
-text = f"Новая школьная программа {tokenizer.mask_token} от старой программы."
+while True:
+    text = input(r"Введите ваше предложение с 1 пропуском ({word} – пропуск): ")
+    if text.count('word') == 1:
+        break
+text = text.format(word=tokenizer.mask_token)
+print()
 input = tokenizer._encode_plus(text, return_tensors = "pt")
 mask_index = torch.where(input["input_ids"][0] == tokenizer.mask_token_id)
 output = model(**input)
