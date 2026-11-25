@@ -1,9 +1,5 @@
 from sys import argv
-import numpy as np
-import torch
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
-np.random.seed(42)
-torch.manual_seed(42)
+from transformers import GPT2LMHeadModel, GPT2Tokenizer, set_seed
 from transformers.utils import logging
 
 logging.set_verbosity_error()
@@ -35,6 +31,8 @@ tokenizer, model = load_tokenizer_and_model('ai-forever/rugpt3large_based_on_gpt
 while True:
     try:
         prompt = input("Введите промпт: ")
+
+        set_seed(42)
 
         result = generate(
             model, tokenizer, prompt,
